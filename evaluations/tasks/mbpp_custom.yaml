@@ -1,0 +1,17 @@
+include: mbpp_plus_custom.yaml
+task: mbpp_custom
+dataset_path: google-research-datasets/mbpp
+dataset_name: full
+doc_to_text: |
+  Please provide a self-contained Python script that solves the following problem in a markdown code block:
+  ```
+  """
+  {{ text | replace("[link text](https:// [link text](https:// [link text](https://)))", "") }}
+  {{ test_list[0] }}
+  """
+  ```
+doc_to_target: |
+  {{ test_setup_code }}
+  {% for test_case in test_list %}
+  {{ test_case }}
+  {% endfor %}

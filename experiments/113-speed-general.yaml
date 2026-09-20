@@ -1,0 +1,94 @@
+gpus: [0]
+memory_fraction: 0.4
+server_seed: 1234
+max_running_requests: 1
+num_concurrent: 1
+timeout: 3600
+
+tasks: tasks.yaml
+results_root: results
+
+models:
+  Ouro-1.4B:
+    configs:
+      baseline:
+        sampling:
+          greedy:
+            tasks: [bbh]
+      "1":
+        sampling:
+          greedy:
+            tasks: [bbh]
+      "1:2":
+        sampling:
+          greedy:
+            tasks: [bbh]
+
+  Ouro-2.6B:
+    configs:
+      baseline:
+        sampling:
+          greedy:
+            tasks: [bbh]
+      "1":
+        sampling:
+          greedy:
+            tasks: [bbh]
+      "1:2":
+        sampling:
+          greedy:
+            tasks: [bbh]
+
+  Recurrent-Llama-3.2-train-recurrence-32:
+    configs:
+      baseline:
+        sampling:
+          greedy:
+            tasks: [bbh]
+      "2":
+        sampling:
+          greedy:
+            tasks: [bbh]
+      "2:4":
+        sampling:
+          greedy:
+            tasks: [bbh]
+      "2:5":
+        sampling:
+          greedy:
+            tasks: [bbh]
+      "4":
+        sampling:
+          greedy:
+            tasks: [bbh]
+      "4:2":
+        sampling:
+          greedy:
+            tasks: [bbh]
+
+  Recurrent-OLMo-2-0425-train-recurrence-32:
+    configs:
+      baseline:
+        sampling:
+          greedy:
+            tasks: [bbh]
+      "2":
+        sampling:
+          greedy:
+            tasks: [bbh]
+      "2:4":
+        sampling:
+          greedy:
+            tasks: [bbh]
+      "2:5":
+        sampling:
+          greedy:
+            tasks: [bbh]
+      "4":
+        sampling:
+          greedy:
+            tasks: [bbh]
+      "4:2":
+        sampling:
+          greedy:
+            tasks: [bbh]

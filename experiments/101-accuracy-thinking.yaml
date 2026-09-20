@@ -1,0 +1,32 @@
+gpus: [2]
+memory_fraction: 0.9
+server_seed: 1234
+max_running_requests: 512
+num_concurrent: 512
+timeout: 28800
+
+tasks: tasks.yaml
+results_root: results
+
+models:
+  Ouro-1.4B-Thinking:
+    configs:
+      baseline:
+        sampling:
+          greedy:
+            tasks: [gsm8k-cot, math500, gsm8k-cot-chat, math500-chat, aime24-chat, aime25-chat]
+          t1.0_p0.7:
+            temperature: 1.0
+            top_p: 0.7
+            tasks: [gsm8k-cot-chat, math500-chat, aime24-chat, aime25-chat]
+
+  Ouro-2.6B-Thinking:
+    configs:
+      baseline:
+        sampling:
+          greedy:
+            tasks: [gsm8k-cot, math500, gsm8k-cot-chat, math500-chat, aime24-chat, aime25-chat]
+          t1.0_p0.7:
+            temperature: 1.0
+            top_p: 0.7
+            tasks: [gsm8k-cot-chat, math500-chat, aime24-chat, aime25-chat]

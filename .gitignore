@@ -1,0 +1,20 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+.cache/
+.flashinfer/
+.tmp/
+.triton/
+.gpu-tmp/
+nsys/
+
+# Virtual environments
+.venv
+
+# Models and Datas
+models/
+results/

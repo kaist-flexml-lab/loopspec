@@ -1,0 +1,93 @@
+gsm8k-cot: # non-thinking models, 3-shot CoT, exact_match (flexible-extract)
+  lm_eval_task: gsm8k_cot
+  max_gen_toks: 512
+  max_length: 2048
+  num_fewshot: 3
+  eval_seed: 1234
+
+gsm8k-cot-chat: # thinking models, 3-shot CoT, exact_match (flexible-extract)
+  lm_eval_task: gsm8k_cot
+  max_gen_toks: 4096
+  max_length: 8192
+  num_fewshot: 3
+  apply_chat_template: true
+  enable_thinking: true
+  eval_seed: 1234
+
+math500: # non-thinking models, 4-shot, math_verify
+  lm_eval_task: minerva_math500
+  max_gen_toks: 2048
+  max_length: 4096
+  num_fewshot: 4
+  eval_seed: 1234
+
+math500-chat: # thinking models, 4-shot, math_verify
+  lm_eval_task: minerva_math500
+  max_gen_toks: 8192
+  max_length: 16384
+  num_fewshot: 4
+  apply_chat_template: true
+  enable_thinking: true
+  eval_seed: 1234
+
+aime24-chat: # thinking models, 0-shot, exact_match
+  lm_eval_task: aime24
+  max_gen_toks: 16384
+  max_length: 32768
+  apply_chat_template: true
+  enable_thinking: true
+  eval_seed: 1234
+
+aime25-chat: # thinking models, 0-shot, exact_match
+  lm_eval_task: aime25
+  max_gen_toks: 16384
+  max_length: 32768
+  apply_chat_template: true
+  enable_thinking: true
+  eval_seed: 1234
+
+bbh: # non-thinking models, 3-shot, exact_match (get-answer)
+  lm_eval_task: bbh_cot_fewshot
+  max_gen_toks: 1024
+  max_length: 4096
+  num_fewshot: 3
+  eval_seed: 1234
+
+mmlu-pro: # non-thinking models, 5-shot, exact_match (custom-extract)
+  lm_eval_task: mmlu_pro
+  max_gen_toks: 2048
+  max_length: 8192
+  num_fewshot: 5
+  eval_seed: 1234
+
+humaneval: # non-thinking-models, custom prompt 0-shot, pass@1
+  lm_eval_task: humaneval_custom
+  max_gen_toks: 1024
+  max_length: 2048
+  num_fewshot: 0
+  eval_seed: 1234
+  confirm_run_unsafe_code: true
+
+humaneval-plus: # non-thinking-models, custom prompt 0-shot, pass@1
+  lm_eval_task: humaneval_plus_custom
+  max_gen_toks: 1024
+  max_length: 2048
+  num_fewshot: 0
+  eval_seed: 1234
+  confirm_run_unsafe_code: true
+
+mbpp: # non-thinking-models, custom prompt 0-shot, pass@1
+  lm_eval_task: mbpp_custom
+  max_gen_toks: 1024
+  max_length: 4096
+  num_fewshot: 0
+  eval_seed: 1234
+  confirm_run_unsafe_code: true
+
+mbpp-plus: # non-thinking-models, custom prompt 0-shot, pass@1
+  lm_eval_task: mbpp_plus_custom
+  max_gen_toks: 1024
+  max_length: 2048
+  num_fewshot: 0
+  eval_seed: 1234
+  confirm_run_unsafe_code: true

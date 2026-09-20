@@ -1,0 +1,41 @@
+services:
+  sglang:
+    image: pipelined-sglang
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: server
+    volumes:
+      - ./models:/app/models:ro
+      - model-cache:/root/.cache
+    shm_size: 16gb
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - --fail
+        - --silent
+        - http://127.0.0.1:30000/model_info
+      interval: 2s
+      timeout: 2s
+      retries: 300
+      start_period: 10s
+
+  lm-eval:
+    image: pipelined-lm-eval
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: eval
+    depends_on:
+      sglang:
+        condition: service_healthy
+    volumes:
+      - ./models:/app/models:ro
+      - ./results:/app/results
+      - model-cache:/root/.cache
+
+volumes:
+  model-cache:
+    name: pipelined-model-cache
+    external: true

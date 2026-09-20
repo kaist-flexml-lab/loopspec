@@ -1,0 +1,11 @@
+include: humaneval_plus_custom.yaml
+task: humaneval_custom
+dataset_path: openai/openai_humaneval
+doc_to_text: |
+  Please provide a self-contained Python script that solves the following problem in a markdown code block:
+  ```
+  {{ prompt | replace("\ndef max_fill(grid, capacity):\n    import math\n", "import math\n\ndef max_fill(grid, capacity):\n") | trim }}
+  ```
+doc_to_target: |
+  {{ test }}
+  check({{ entry_point }})

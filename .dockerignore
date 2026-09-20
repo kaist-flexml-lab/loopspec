@@ -1,0 +1,13 @@
+.git
+.venv
+.tmp
+.pytest_cache
+.cache
+models
+results
+vllm-standalone
+**/__pycache__
+**/*.pyc
+*.log
+*.nsys-rep
+*.sqlite

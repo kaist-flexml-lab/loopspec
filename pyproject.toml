@@ -1,0 +1,24 @@
+[project]
+name = "pipelined"
+version = "0.1.0"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "flashinfer-python[cu13]==0.6.12",
+    "sglang==0.5.14",
+    "torch==2.11.0",
+    "transformers==5.8.1",
+    "pyyaml==6.0.3",
+]
+
+[tool.uv]
+package = false
+environments = ["sys_platform == 'linux' and platform_machine == 'x86_64'"]
+prerelease = "allow"
+
+[dependency-groups]
+eval = [
+    "lm-eval[api,math]==0.4.12",
+    "protobuf==6.33.6",
+    "sentencepiece==0.2.2",
+    "transformers==5.8.1",
+]
