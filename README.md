@@ -1,8 +1,5 @@
 # LoopSpec: Pipelined Self-Speculative Decoding for Looped Transformers
 
-SangLyul Cho*, Langqing Cui*, Sehoon Kim, Dongsu Han, Insu Han<br>
-Seoul National University · KAIST · *Equal contribution
-
 [Paper](https://arxiv.org/pdf/2609.17184) | [Project Page](https://langq1225.github.io/loopspec/) | [Getting Started](#getting-started) | [Reproducing Benchmarks](#reproducing-benchmarks) | [Inference](#inference)
 
 Accelerate Ouro and Raven inference using the model's own intermediate predictions. LoopSpec drafts upcoming tokens while verifying earlier ones, reusing work across recurrent steps.
@@ -12,6 +9,8 @@ Accelerate Ouro and Raven inference using the model's own intermediate predictio
 - **Run through SGLang.** Includes an inference server, a streaming demo, and benchmark scripts.
 
 LoopSpec achieves **up to 6.83× decoding speedup**. See the [paper](https://arxiv.org/pdf/2609.17184) for results and the method.
+
+https://github.com/user-attachments/assets/596fa1bf-07aa-479a-8362-51b1c3d79958
 
 ## Getting Started
 
