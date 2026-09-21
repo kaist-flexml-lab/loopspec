@@ -17,8 +17,8 @@ DEFAULT_CONFIG = Path(__file__).with_name("config.yaml")
 class StrategyConfig:
     name: str
     mode: str
-    step_size: int | None = None
-    second_step: int | None = None
+    first: int | None = None
+    second: int | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -101,8 +101,8 @@ def _read_strategy(name: str, raw: Any) -> StrategyConfig:
         values,
         {
             "mode",
-            "step_size",
-            "second_step",
+            "first",
+            "second",
         },
     )
     mode = values.get("mode")
@@ -116,26 +116,27 @@ def _read_strategy(name: str, raw: Any) -> StrategyConfig:
 
     allowed = {
         "mode",
-        "step_size",
-        "second_step",
+        "first",
+        "second",
     }
     if set(values) - allowed:
         raise ValueError(f"configuration {name}: invalid LoopSpec options")
-    if "step_size" not in values:
-        raise ValueError(f"configuration {name}: LoopSpec requires step_size")
-    step_size = _positive_int(
-        f"configuration {name}: step_size", values["step_size"]
-    )
-    second_step = values.get("second_step")
-    if second_step is not None:
-        second_step = _positive_int(
-            f"configuration {name}: second_step", second_step
-        )
+    if "first" not in values:
+        raise ValueError(f"configuration {name}: LoopSpec requires first")
+    first = _positive_int(f"configuration {name}: first", values["first"])
+    second = values.get("second")
+    if second is not None:
+        second = _positive_int(f"configuration {name}: second", second)
+        if second <= first or second % first:
+            raise ValueError(
+                f"configuration {name}: second must be a multiple of first "
+                "and greater than it"
+            )
     return StrategyConfig(
         name=name,
         mode=mode,
-        step_size=step_size,
-        second_step=second_step,
+        first=first,
+        second=second,
     )
 
 
@@ -282,10 +283,10 @@ def server_arguments(config: DemoConfig) -> list[str]:
         "--enable-metrics",
     ]
     if strategy.mode == "loopspec":
-        arguments += ["--loopspec", "--step-size", str(strategy.step_size)]
-        if strategy.second_step is not None:
+        arguments += ["--loopspec", "--first", str(strategy.first)]
+        if strategy.second is not None:
             arguments += [
-                "--second-step",
-                str(strategy.second_step),
+                "--second",
+                str(strategy.second),
             ]
     return arguments

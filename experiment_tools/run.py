@@ -42,9 +42,9 @@ def server_arguments(experiment: Experiment, job: Job) -> list[str]:
     if not job.uses_loopspec:
         return arguments
 
-    arguments += ["--loopspec", "--step-size", str(job.loopspec_step)]
-    if job.loopspec_multiplier is not None:
-        arguments += ["--second-step", str(job.loopspec_multiplier)]
+    arguments += ["--loopspec", "--first", str(job.loopspec_first)]
+    if job.loopspec_second is not None:
+        arguments += ["--second", str(job.loopspec_second)]
     return arguments
 
 

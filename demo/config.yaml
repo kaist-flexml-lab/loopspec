@@ -25,22 +25,22 @@ models:
     chat: false
     configs:
       baseline: {mode: baseline}
-      "1": {mode: loopspec, step_size: 1}
+      "1": {mode: loopspec, first: 1}
       "1:2":
         mode: loopspec
-        step_size: 1
-        second_step: 2
+        first: 1
+        second: 2
 
   Ouro-2.6B:
     path: models/Ouro-2.6B
     chat: false
     configs:
       baseline: {mode: baseline}
-      "1": {mode: loopspec, step_size: 1}
+      "1": {mode: loopspec, first: 1}
       "1:2":
         mode: loopspec
-        step_size: 1
-        second_step: 2
+        first: 1
+        second: 2
 
   Ouro-1.4B-Thinking:
     path: models/Ouro-1.4B-Thinking
@@ -48,11 +48,11 @@ models:
     enable_thinking: true
     configs:
       baseline: {mode: baseline}
-      "1": {mode: loopspec, step_size: 1}
+      "1": {mode: loopspec, first: 1}
       "1:2":
         mode: loopspec
-        step_size: 1
-        second_step: 2
+        first: 1
+        second: 2
 
   Ouro-2.6B-Thinking:
     path: models/Ouro-2.6B-Thinking
@@ -60,41 +60,41 @@ models:
     enable_thinking: true
     configs:
       baseline: {mode: baseline}
-      "1": {mode: loopspec, step_size: 1}
+      "1": {mode: loopspec, first: 1}
       "1:2":
         mode: loopspec
-        step_size: 1
-        second_step: 2
+        first: 1
+        second: 2
 
   Recurrent-Llama-3.2-train-recurrence-32:
     path: models/Recurrent-Llama-3.2-train-recurrence-32
     chat: false
     configs:
       baseline: {mode: baseline}
-      "2": {mode: loopspec, step_size: 2}
-      "2:4": {mode: loopspec, step_size: 2, second_step: 4}
-      "2:5": {mode: loopspec, step_size: 2, second_step: 5}
-      "4": {mode: loopspec, step_size: 4}
-      "4:2": {mode: loopspec, step_size: 4, second_step: 2}
+      "2": {mode: loopspec, first: 2}
+      "2:8": {mode: loopspec, first: 2, second: 8}
+      "2:10": {mode: loopspec, first: 2, second: 10}
+      "4": {mode: loopspec, first: 4}
+      "4:8": {mode: loopspec, first: 4, second: 8}
 
   Recurrent-OLMo-2-0425-train-recurrence-32:
     path: models/Recurrent-OLMo-2-0425-train-recurrence-32
     chat: false
     configs:
       baseline: {mode: baseline}
-      "2": {mode: loopspec, step_size: 2}
-      "2:4": {mode: loopspec, step_size: 2, second_step: 4}
-      "2:5": {mode: loopspec, step_size: 2, second_step: 5}
-      "4": {mode: loopspec, step_size: 4}
-      "4:2": {mode: loopspec, step_size: 4, second_step: 2}
+      "2": {mode: loopspec, first: 2}
+      "2:8": {mode: loopspec, first: 2, second: 8}
+      "2:10": {mode: loopspec, first: 2, second: 10}
+      "4": {mode: loopspec, first: 4}
+      "4:8": {mode: loopspec, first: 4, second: 8}
 
   Recurrent-TinyLlama-3T-train-recurrence-32:
     path: models/Recurrent-TinyLlama-3T-train-recurrence-32
     chat: false
     configs:
       baseline: {mode: baseline}
-      "2": {mode: loopspec, step_size: 2}
-      "2:4": {mode: loopspec, step_size: 2, second_step: 4}
-      "2:5": {mode: loopspec, step_size: 2, second_step: 5}
-      "4": {mode: loopspec, step_size: 4}
-      "4:2": {mode: loopspec, step_size: 4, second_step: 2}
+      "2": {mode: loopspec, first: 2}
+      "2:8": {mode: loopspec, first: 2, second: 8}
+      "2:10": {mode: loopspec, first: 2, second: 10}
+      "4": {mode: loopspec, first: 4}
+      "4:8": {mode: loopspec, first: 4, second: 8}

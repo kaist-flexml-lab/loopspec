@@ -65,7 +65,7 @@ CUDA_VISIBLE_DEVICES=0 uv run --locked --no-dev python -m sglang_recurrent.serve
   --model models/Ouro-1.4B \
   --host 127.0.0.1 \
   --port 30000 \
-  --loopspec --step-size 1 --second-step 2
+  --loopspec --first 1 --second 2
 ```
 
 Once the server is ready, generate text from another terminal:
@@ -88,11 +88,11 @@ Use the same launch command with the following decoding flags:
 | Mode | Flags | Experiment config key |
 | --- | --- | --- |
 | Autoregressive baseline | Omit all LoopSpec flags | `baseline` |
-| LoopSpec, one proposal (Ouro) | `--loopspec --step-size 1` | `"1"` |
-| LoopSpec, two proposals (Ouro) | `--loopspec --step-size 1 --second-step 2` | `"1:2"` |
-| LoopSpec, two proposals (Raven) | `--loopspec --step-size 2 --second-step 4` | `"2:4"` |
+| LoopSpec, one proposal (Ouro) | `--loopspec --first 1` | `"1"` |
+| LoopSpec, two proposals (Ouro) | `--loopspec --first 1 --second 2` | `"1:2"` |
+| LoopSpec, two proposals (Raven) | `--loopspec --first 2 --second 8` | `"2:8"` |
 
-You should also change `--model` to a downloaded Raven checkpoint. `--step-size K` sets the first proposal depth; `--second-step X` places the second proposal at depth `K × X`. Thus, `"2:4"` means proposals at depths 2 and 8. `K` must divide the model's total recurrent depth `R`, and a second proposal requires `1 < X < R/K`.
+First proposal depth must divide the model's total recurrent depth, and a second proposal depth requires to be a multiple of the first proposal depth.
 
 ### Interactive demo
 

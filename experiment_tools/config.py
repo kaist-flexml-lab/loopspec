@@ -12,6 +12,7 @@ from typing import Any
 import yaml
 
 NAMED_STRATEGIES = {"baseline"}
+# LoopSpec configuration keys name the proposal depths directly: "K" or "K:D".
 LOOPSPEC_CONFIGURATION = re.compile(r"([1-9]\d*)(?::([1-9]\d*))?")
 GpuId = int | str
 
@@ -72,8 +73,8 @@ class Job:
     strategy: str
     task: Task
     sampling: Sampling
-    loopspec_step: int | None = None
-    loopspec_multiplier: int | None = None
+    loopspec_first: int | None = None
+    loopspec_second: int | None = None
 
     @property
     def model_path(self) -> str:
@@ -87,9 +88,9 @@ class Job:
     def result_name(self) -> str:
         configuration = self.strategy
         if self.uses_loopspec:
-            configuration = f"k{self.loopspec_step}"
-            if self.loopspec_multiplier is not None:
-                configuration += f"-x{self.loopspec_multiplier}"
+            configuration = f"k{self.loopspec_first}"
+            if self.loopspec_second is not None:
+                configuration += f"-d{self.loopspec_second}"
         return f"{configuration}_{self.sampling.alias}"
 
 
@@ -235,10 +236,18 @@ def _read_jobs(
 
             if loopspec is not None:
                 strategy = "loopspec"
-                first, second = loopspec.groups()
-                job_options["loopspec_step"] = int(first)
+                first = int(loopspec.group(1))
+                second = loopspec.group(2)
+                job_options["loopspec_first"] = first
                 if second is not None:
-                    job_options["loopspec_multiplier"] = int(second)
+                    second = int(second)
+                    if second <= first or second % first:
+                        raise ValueError(
+                            f"invalid configuration: {configuration}: the "
+                            "second depth must be a multiple of the first "
+                            "depth and greater than it"
+                        )
+                    job_options["loopspec_second"] = second
             else:
                 strategy = "baseline"
 

@@ -49,11 +49,11 @@ models:
         sampling:
           greedy:
             tasks: [bbh]
-      "2:4":
+      "2:8":
         sampling:
           greedy:
             tasks: [bbh]
-      "2:5":
+      "2:10":
         sampling:
           greedy:
             tasks: [bbh]
@@ -61,7 +61,7 @@ models:
         sampling:
           greedy:
             tasks: [bbh]
-      "4:2":
+      "4:8":
         sampling:
           greedy:
             tasks: [bbh]
@@ -76,11 +76,11 @@ models:
         sampling:
           greedy:
             tasks: [bbh]
-      "2:4":
+      "2:8":
         sampling:
           greedy:
             tasks: [bbh]
-      "2:5":
+      "2:10":
         sampling:
           greedy:
             tasks: [bbh]
@@ -88,7 +88,7 @@ models:
         sampling:
           greedy:
             tasks: [bbh]
-      "4:2":
+      "4:8":
         sampling:
           greedy:
             tasks: [bbh]

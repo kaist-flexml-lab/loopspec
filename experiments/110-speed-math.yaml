@@ -49,11 +49,11 @@ models:
         sampling:
           greedy:
             tasks: [gsm8k-cot, math500]
-      "2:4":
+      "2:8":
         sampling:
           greedy:
             tasks: [gsm8k-cot, math500]
-      "2:5":
+      "2:10":
         sampling:
           greedy:
             tasks: [gsm8k-cot, math500]
@@ -61,7 +61,7 @@ models:
         sampling:
           greedy:
             tasks: [gsm8k-cot, math500]
-      "4:2":
+      "4:8":
         sampling:
           greedy:
             tasks: [gsm8k-cot, math500]
@@ -76,11 +76,11 @@ models:
         sampling:
           greedy:
             tasks: [gsm8k-cot, math500]
-      "2:4":
+      "2:8":
         sampling:
           greedy:
             tasks: [gsm8k-cot, math500]
-      "2:5":
+      "2:10":
         sampling:
           greedy:
             tasks: [gsm8k-cot, math500]
@@ -88,7 +88,7 @@ models:
         sampling:
           greedy:
             tasks: [gsm8k-cot, math500]
-      "4:2":
+      "4:8":
         sampling:
           greedy:
             tasks: [gsm8k-cot, math500]
@@ -103,11 +103,11 @@ models:
         sampling:
           greedy:
             tasks: [gsm8k-cot]
-      "2:4":
+      "2:8":
         sampling:
           greedy:
             tasks: [gsm8k-cot]
-      "2:5":
+      "2:10":
         sampling:
           greedy:
             tasks: [gsm8k-cot]
@@ -115,7 +115,7 @@ models:
         sampling:
           greedy:
             tasks: [gsm8k-cot]
-      "4:2":
+      "4:8":
         sampling:
           greedy:
             tasks: [gsm8k-cot]

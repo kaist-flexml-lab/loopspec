@@ -49,11 +49,11 @@ models:
         sampling:
           greedy:
             tasks: [humaneval-plus, mbpp-plus]
-      "2:4":
+      "2:8":
         sampling:
           greedy:
             tasks: [humaneval-plus, mbpp-plus]
-      "2:5":
+      "2:10":
         sampling:
           greedy:
             tasks: [humaneval-plus, mbpp-plus]
@@ -61,7 +61,7 @@ models:
         sampling:
           greedy:
             tasks: [humaneval-plus, mbpp-plus]
-      "4:2":
+      "4:8":
         sampling:
           greedy:
             tasks: [humaneval-plus, mbpp-plus]
@@ -76,11 +76,11 @@ models:
         sampling:
           greedy:
             tasks: [humaneval-plus, mbpp-plus]
-      "2:4":
+      "2:8":
         sampling:
           greedy:
             tasks: [humaneval-plus, mbpp-plus]
-      "2:5":
+      "2:10":
         sampling:
           greedy:
             tasks: [humaneval-plus, mbpp-plus]
@@ -88,7 +88,7 @@ models:
         sampling:
           greedy:
             tasks: [humaneval-plus, mbpp-plus]
-      "4:2":
+      "4:8":
         sampling:
           greedy:
             tasks: [humaneval-plus, mbpp-plus]
@@ -103,11 +103,11 @@ models:
         sampling:
           greedy:
             tasks: [humaneval-plus, mbpp-plus]
-      "2:4":
+      "2:8":
         sampling:
           greedy:
             tasks: [humaneval-plus, mbpp-plus]
-      "2:5":
+      "2:10":
         sampling:
           greedy:
             tasks: [humaneval-plus, mbpp-plus]
@@ -115,7 +115,7 @@ models:
         sampling:
           greedy:
             tasks: [humaneval-plus, mbpp-plus]
-      "4:2":
+      "4:8":
         sampling:
           greedy:
             tasks: [humaneval-plus, mbpp-plus]

@@ -37,9 +37,14 @@ class ParseError(ValueError):
 def result_layout(
     directory: Path,
 ) -> tuple[str, str, str, str] | None:
-    """Parse an experiment result directory name."""
+    """Parse an experiment result directory name.
+
+    LoopSpec names are either "k{K}-d{D}" (current: D is the second
+    proposal depth) or "k{K}-x{X}" (legacy: X is the multiplier, so the
+    second proposal depth is K*X). Both resolve to proposal depths.
+    """
     match = re.fullmatch(
-        r"(baseline|k\d+(?:-x\d+)?)"
+        r"(baseline|k\d+(?:-[xd]\d+)?)"
         r"(?:_gate-(?:always|decrease|stochastic)"
         r"_proposal-(?:residual|masked-q2))?_(.+)",
         directory.name,
@@ -49,12 +54,15 @@ def result_layout(
         decoding = "greedy" if sampling == "greedy" else "sampling"
         if config == "baseline":
             return "—", "—", decoding, sampling
-        loopspec = re.fullmatch(r"k(\d+)(?:-x(\d+))?", config)
+        loopspec = re.fullmatch(r"k(\d+)(?:-([xd])(\d+))?", config)
         assert loopspec is not None
-        first, multiplier = loopspec.groups()
-        second = (
-            str(int(first) * int(multiplier)) if multiplier else "—"
-        )
+        first, kind, value = loopspec.groups()
+        if kind is None:
+            second = "—"
+        elif kind == "d":
+            second = value
+        else:
+            second = str(int(first) * int(value))
         return first, second, decoding, sampling
     return None
 

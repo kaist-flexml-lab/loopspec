@@ -64,17 +64,17 @@ def main():
     )
     parser.add_argument("--loopspec", action="store_true")
     parser.add_argument(
-        "--step-size",
+        "--first",
         type=_positive_int,
         default=1,
-        help="K: recurrent layers per pipeline step; must divide S",
+        help="K: first proposal depth; must divide the recurrent depth R",
     )
     parser.add_argument(
-        "--second-step",
+        "--second",
         type=_positive_int,
         help=(
-            "X: optional q2 step, placing q2 at K*X layers; "
-            "must satisfy 1 < X < S/K"
+            "D: optional second proposal depth, read out after D iterations; "
+            "must be a multiple of K with K < D < R"
         ),
     )
 
@@ -89,6 +89,11 @@ def main():
         parser.error("--max-running-requests greater than 1 is baseline-only")
     if args.loopspec and args.stream_interval != 1:
         parser.error("--loopspec currently requires --stream-interval=1")
+    if args.loopspec and args.second is not None:
+        if args.second <= args.first:
+            parser.error("--second must be greater than --first")
+        if args.second % args.first:
+            parser.error("--second must be a multiple of --first")
     if args.loopspec and any(
         size != 1
         for size in (
@@ -155,8 +160,12 @@ def main():
 
     server_args = ServerArgs.from_cli_args(args)
     if args.loopspec:
-        server_args.recurrent_step_size = args.step_size
-        server_args.recurrent_second_step = args.second_step
+        server_args.recurrent_step_size = args.first
+        # The schedule takes the q2 cycle multiplier X; --second is the
+        # absolute depth D = K * X.
+        server_args.recurrent_second_step = (
+            args.second // args.first if args.second is not None else None
+        )
 
     launch_server(
         server_args,
