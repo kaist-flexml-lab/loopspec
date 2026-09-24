@@ -5,7 +5,7 @@ active:
   config: "1:2"
 
 server:
-  gpu: 2
+  gpu: 0
   mem_fraction_static: 0.5
   random_seed: 1234
 
