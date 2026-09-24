@@ -17,9 +17,6 @@ _STOP_SEQUENCES = (
 
 
 def _strip_stop_prefix_suffix(completion: str) -> str:
-    # TODO: Revisit partial-stop stripping: it can remove actual code or repair
-    # truncated output, changing pass@1. Audit raw vs. stripped predictions
-    # before changing this policy, and rescore baselines and speculative runs alike.
     suffix_length = max(
         (
             length

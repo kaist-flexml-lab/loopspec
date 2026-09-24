@@ -1,6 +1,6 @@
 # LoopSpec: Pipelined Self-Speculative Decoding for Looped Transformers
 
-[Paper](https://arxiv.org/pdf/2609.17184) | [Project Page](https://langq1225.github.io/loopspec/) | [Getting Started](#getting-started) | [Reproducing Benchmarks](#reproducing-benchmarks) | [Inference](#inference)
+[Getting Started](#getting-started) | [Reproducing Benchmarks](#reproducing-benchmarks) | [Inference](#inference)
 
 Accelerate Ouro and Raven inference using the model's own intermediate predictions. LoopSpec drafts upcoming tokens while verifying earlier ones, reusing work across recurrent steps.
 
@@ -8,17 +8,15 @@ Accelerate Ouro and Raven inference using the model's own intermediate predictio
 - **Keep the target model's behavior.** Supports lossless greedy decoding and sampling.
 - **Run through SGLang.** Includes an inference server, a streaming demo, and benchmark scripts.
 
-LoopSpec achieves **up to 6.83× decoding speedup**. See the [paper](https://arxiv.org/pdf/2609.17184) for results and the method.
-
-https://github.com/user-attachments/assets/596fa1bf-07aa-479a-8362-51b1c3d79958
+LoopSpec achieves **up to 6.83× decoding speedup**.
 
 ## Getting Started
 
 Requires **Linux x86-64, Python 3.11, `uv`, and an NVIDIA GPU** with a compatible CUDA environment. Dependencies are pinned in [pyproject.toml](pyproject.toml) and `uv.lock`.
 
+Extract this repository, then from its root run:
+
 ```bash
-git clone https://github.com/kaist-flexml-lab/loopspec.git
-cd loopspec
 uv sync --locked --no-dev
 ```
 
@@ -53,8 +51,6 @@ Each job saves evaluation outputs, generation traces, and server logs under `res
 ```bash
 uv run --locked --no-dev python benchmark.py report results
 ```
-
-For comparable latency measurements, keep `max_running_requests: 1` and `num_concurrent: 1`. Baseline accuracy runs are provided separately for [base models](experiments/100-accuracy-base.yaml) and [thinking models](experiments/101-accuracy-thinking.yaml). Prompting and token budgets are configured in [experiments/tasks.yaml](experiments/tasks.yaml).
 
 ## Inference
 
@@ -124,18 +120,3 @@ To download all seven models:
 uv run --locked --no-dev python download.py
 ```
 
-## Citation
-
-If you use LoopSpec in your research, please cite:
-
-```bibtex
-@misc{cho2026loopspec,
-      title={LoopSpec: Pipelined Self-Speculative Decoding for Looped Transformers}, 
-      author={SangLyul Cho and Langqing Cui and Sehoon Kim and Dongsu Han and Insu Han},
-      year={2026},
-      eprint={2609.17184},
-      archivePrefix={arXiv},
-      primaryClass={cs.LG},
-      url={https://arxiv.org/abs/2609.17184}, 
-}
-```

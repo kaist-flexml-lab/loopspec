@@ -72,8 +72,6 @@ class RecurrentCudaGraphRunner(DecodeCudaGraphRunner):
         allocator = self.model_runner.token_to_kv_pool_allocator
         self.decode_slots = DecodeSlotPool(allocator.size, self.req_pool_indices.device)
 
-        # TODO: Move cuda_graph_inputs() and its per-width buffer cache from
-        # RecurrentServingModel into this runner; they are graph-owned scratch.
         hidden, injected = self.model_runner.model.cuda_graph_inputs(original_bs[-1])
         # Bank indices are persistent lane-state slots, NOT request-pool rows
         # or KV slot IDs. Per-width model inputs are separate gather buffers.
@@ -283,9 +281,6 @@ class RecurrentCudaGraphRunner(DecodeCudaGraphRunner):
                 (self.seq_lens, values[MetadataRow.SEQUENCE_LENGTH]),
                 (self.positions, values[MetadataRow.POSITION]),
                 (self.input_ids, values[MetadataRow.TOKEN]),
-                # TODO: Remove these two unused copies and their destination
-                # allocations in capture(). Allocation/mapping kernels already
-                # read PARENT_REQUEST and MAPPING_COPY_LENGTH from values directly.
                 (
                     self.mapping_parent_req_pool_indices,
                     values[MetadataRow.PARENT_REQUEST],

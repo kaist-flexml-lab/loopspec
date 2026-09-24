@@ -95,10 +95,6 @@ class PreExecutor(nn.Module):
         """
         if self.init_std is None:
             raise RuntimeError("this pre executor has no separate hidden state")
-        # TODO: The extra random draw has little impact on serving performance,
-        # but randn can be replaced with torch.empty: trunc_normal_ or zero_
-        # overwrites every value. This changes RNG consumption, so recheck
-        # seeded reproducibility against the reference before switching.
         hidden = torch.randn(
             (count, self.embed_tokens.embedding_dim),
             device=device,

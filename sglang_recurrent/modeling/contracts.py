@@ -44,11 +44,6 @@ def build_recurrent_spec(config: Any) -> RecurrentModelSpec:
         raise ValueError(
             f"unsupported recurrent model type: {config.model_type}"
         )
-    # TODO: Replace this checkpoint-specific heuristic with explicit layout
-    # metadata. The released Raven configs call both the Llama pre-norm and
-    # OLMo2 post-norm implementations "SandwichBlock" and do not identify
-    # which implementation they contain; head_dim only happens to distinguish
-    # the currently supported checkpoints.
     # "olmo_post": OLMo2-based Raven; normalize attention/MLP outputs before
     # adding each residual: x = x + norm_1(attn(x)); x = x + norm_2(mlp(x)).
     # "raven_pre": Llama/TinyLlama-based Raven; normalize attention/MLP inputs:

@@ -24,6 +24,6 @@ server or `/clear` to clear the terminal. A one-shot prompt is also supported:
 ```
 
 The model catalog mirrors the baseline and LoopSpec configurations in
-`experiments/*.yaml`. LoopSpec remains single-GPU and always streams with interval
-1. Decode time uses the same window as SGLang's decode TPS and excludes the
+`experiments/*.yaml`. LoopSpec remains single-GPU and always streams with interval 1.
+Decode time uses the same window as SGLang's decode TPS and excludes the
 first token: `(completion tokens - 1) / decode TPS`.

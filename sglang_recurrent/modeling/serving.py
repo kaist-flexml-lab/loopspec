@@ -76,17 +76,12 @@ class RecurrentServingModel(nn.Module):
             "recurrent": _collect_attention_layers(self.recurrent_executor),
             "post": _collect_attention_layers(self.post_executor),
         }
-        # TODO: Move these buffers and cuda_graph_inputs() to
-        # RecurrentCudaGraphRunner when reviewing that class.
         self._cuda_graph_inputs: dict[
             int, tuple[torch.Tensor, torch.Tensor | None]
         ] = {}
         # Exclusive layer range for one pre/core/post traversal. The baseline
         # subclass expands this range to cover every recurrent iteration.
         self.start_layer = 0
-        # TODO: Reduce LoopSpec's cross-role KV waste: each token slot reserves
-        # storage for all layers, but a role-specific timeline uses only its
-        # role's layers. Consider role-aware KV pools while keeping depths separate.
         self.end_layer = sum(map(len, self.attention_layers.values()))
 
     def cuda_graph_inputs(
@@ -213,9 +208,6 @@ class LoopedRecurrentServingModel(RecurrentServingModel):
         SGLang uses these IDs to select each layer's KV cache. Renumbering the
         shared recurrent modules separates the cache of each logical iteration.
         """
-        # TODO: Replace shared layer_id mutation with per-call logical KV-layer
-        # selection, preserving weight sharing. Validate concurrent/reentrant
-        # forwards and compiled/piecewise graph paths before enabling them.
         layers = self.attention_layers[role]
         for offset, layer in enumerate(layers):
             layer.layer_id = first_layer + offset

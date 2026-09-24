@@ -55,6 +55,15 @@ ENTRYPOINT ["uv", "run", "--locked", "--no-sync", "--no-dev", "-m", "sglang_recu
 CMD ["--model", "models/Ouro-1.4B-Thinking"]
 
 
+# GPU demo
+FROM gpu-deps AS demo
+
+COPY sglang_recurrent sglang_recurrent
+COPY demo demo
+
+ENTRYPOINT ["bash", "demo/run.sh"]
+
+
 # CPU evaluation client
 FROM ghcr.io/astral-sh/uv:0.11.30-python3.11-trixie-slim AS eval
 

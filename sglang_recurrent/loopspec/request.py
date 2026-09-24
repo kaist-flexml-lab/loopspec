@@ -64,9 +64,6 @@ class RecurrentRequest:
         # The executor's decision policy uses the real request's sampling settings,
         # including for the first token after prefill. These internal settings must
         # still be valid; max_new_tokens also affects SGLang's prefill-only checks.
-        # TODO: Separate KV timeline setup from unused SGLang sampling preparation.
-        # If runner.sample() or another consumer of this sampling_info is added,
-        # supply the real request settings rather than these internal defaults.
         sampling_params = SamplingParams(temperature=0, max_new_tokens=max_new_tokens + 1)
         self.batches = DecodeBatchPool(runner)
         self.branch_manager = BranchManager(runner, sampling_params)

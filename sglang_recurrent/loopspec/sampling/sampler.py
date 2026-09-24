@@ -10,7 +10,6 @@ Kernel tl.tensor arguments represent device pointers. Strides are in elements,
 and tl.constexpr dimensions/flags specialize the launch. Kernels write their
 output buffers and return None. Calls share mutable scratch space and must be
 ordered on one stream or through explicit dependencies, not run concurrently.
-The CDF-boundary TODO below documents a known sampling correctness limitation.
 """
 
 import torch
@@ -47,46 +46,6 @@ def _categorical_chunk_sums_kernel(
     tl.store(chunk_sums + row * chunks + chunk, tl.sum(values, axis=0))
 
 
-# TODO(CDF boundary): Share a guarded CDF pick across this kernel,
-# _categorical_pick_top_p_kernel, and _categorical_pick_second_proposal_kernel,
-# for BOTH chunk selection and token selection. Float32 sum/cumsum rounding
-# can leave no CDF candidate, making argmax(all_false) return offset 0 even
-# when its weight is zero. At internal chunk boundaries, separately summed
-# preceding_mass can also make the local target slightly negative. A positive
-# weight mask is needed even when a CDF candidate exists; clamping u below 1
-# alone is insufficient. Greedy decisions do not use these kernels.
-# Candidate shared helper, with zero weights at masked/padded positions:
-#   first = min(where((weights > 0) & (cdf > target), offsets, BLOCK))
-#   last = max(where(weights > 0, offsets, 0))
-#   pick = where(first < BLOCK, first, last)
-# This keeps normal CDF choices among positive weights and falls back to the
-# last positive weight on a miss, as FlashInfer also does. It addresses support
-# violations for finite, nonnegative weights with positive total mass, not all
-# floating-point bias or NaNs. Preserve the inactive, zero-mass q2 path whose
-# sample is ignored by proposal_actions; do not assert positive mass blindly.
-#
-# GPU audit, 2026-09-18, Docker + uv, RTX 4070 (SM89), SGLang 0.5.14,
-# PyTorch 2.11.0, Triton 3.6.0: Recurrent-Llama-3.2-train-recurrence-32,
-# vocab=128256, BF16, S=32, K=4, no q2, temperature=1.0, top_p=0.7.
-# Actual generation: 64 requests x 128 tokens = 8192 tokens; 0 zero-probability
-# picks in 10349 draws (340 categorical + 10009 fused top-p). Warmup excluded.
-# Native-path GPU replay of 512 captured distributions, with ordinary random
-# uniforms: 7 zero-probability picks / 134217728 draws; candidate fix: 0 with
-# the same uniforms. All 7 were in the fused top-p group. About 1 / 19.2M is
-# conditional on this captured set, NOT a universal or final-output error rate:
-# these were replay failures, not generation failures, and drafts may reject.
-# Independent GPU witness: u=0.9772282838821411 picked token 57344 with weight
-# 0; the candidate picked token 57519 with positive weight. CPU-interpreter
-# frequencies from synthetic logits are not GPU/model frequency estimates.
-#
-# Candidate cost on this GPU: 8-row top-p RNG + pick, 2.929 -> 2.896 us
-# (-1.12%). Uninstrumented full generation, 16 matched-seed pairs x 128 tokens:
-# 30.177238 -> 30.177739 s (+0.0017%), identical tokens in all 16 pairs;
-# no material end-to-end runtime difference resolved. Loading/warmup excluded.
-# Before landing, add GPU regressions for missing CDF candidates, internal
-# boundaries, zero/padded weights, and q2 residuals including inactive rows.
-# Q2 was not exercised by this generation audit; timings are specific to this
-# configuration.
 @triton.jit
 def _categorical_pick_kernel(
     probabilities: tl.tensor,
@@ -105,7 +64,7 @@ def _categorical_pick_kernel(
     is float32 [B] in [0,1), and samples receives int64 token IDs [B]. Weights
     need not sum to one but must have positive row mass. chunk_block is the
     power-of-two padded C. Grid (B,), launched after the chunk-sum kernel by
-    sample() or the rejection callback _sample_with_uniforms(). See CDF TODO.
+    sample() or the rejection callback _sample_with_uniforms().
     """
     row = tl.program_id(0)
     chunk_offsets = tl.arange(0, chunk_block)
@@ -168,7 +127,7 @@ def _categorical_pick_top_p_kernel(
     is int64 [S] selecting source rows; otherwise S=B and this pointer is unused.
     uniforms [S] and output samples [S] follow selected-row order. Grid (S,),
     called by sample_top_p() after normalize_top_p_for_sampling() has prepared
-    masses. Original token IDs, not sorted ranks, are written. See CDF TODO.
+    masses. Original token IDs, not sorted ranks, are written.
     """
     sample_row = tl.program_id(0)
     row = (
@@ -185,7 +144,6 @@ def _categorical_pick_top_p_kernel(
     total = tl.sum(sums, axis=0)
     target = tl.load(uniforms + sample_row) * total
     chunk_cdf = tl.cumsum(sums, axis=0)
-    # TODO(CDF boundary): Apply the shared fix above _categorical_pick_kernel.
     selected_chunk = tl.argmax(
         (chunk_cdf > target).to(tl.int32),
         axis=0,
@@ -277,7 +235,7 @@ def _categorical_pick_second_proposal_kernel(
     token, chunk_sums is [B, C], and uniforms/samples are [B]. Grid (B,), called
     between residual summation and normalization by sample_conditional_residual.
     Sampling runs even for inactive rows; its ID must be ignored when the later
-    action flag is zero, including zero-mass rows. See CDF-boundary TODO.
+    action flag is zero, including zero-mass rows.
     """
     row = tl.program_id(0)
     chunk_offsets = tl.arange(0, chunk_block)
@@ -289,7 +247,6 @@ def _categorical_pick_second_proposal_kernel(
     total = tl.sum(sums, axis=0)
     target = tl.load(uniforms + row) * total
     chunk_cdf = tl.cumsum(sums, axis=0)
-    # TODO(CDF boundary): Apply the shared fix above _categorical_pick_kernel.
     selected_chunk = tl.argmax(
         (chunk_cdf > target).to(tl.int32),
         axis=0,
