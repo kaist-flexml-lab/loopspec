@@ -149,20 +149,8 @@ class GenerationMetrics(list[dict[str, Any]]):
         expected_generations: int,
     ) -> GenerationMetrics:
         lines = log.read_text(errors="replace").splitlines()
-        ready = next(
-            (
-                index
-                for index, line in enumerate(lines)
-                if "The server is fired up and ready to roll!" in line
-            ),
-            None,
-        )
-        first_metric_line = ready + 1 if ready is not None else 0
         metrics = cls()
-        for line_number, line in enumerate(
-            lines[first_metric_line:],
-            first_metric_line + 1,
-        ):
+        for line_number, line in enumerate(lines, 1):
             if "generation_metrics" not in line:
                 continue
             match = METRICS_RE.search(line)
@@ -181,6 +169,13 @@ class GenerationMetrics(list[dict[str, Any]]):
                     f"{log}:{line_number}: invalid generation metrics"
                 )
             metrics.append(value)
+        # SGLang's startup warmup generates eight tokens; decode metrics omit
+        # the first. Its log can arrive before or after the HTTP ready message.
+        if (
+            len(metrics) == expected_generations + 1
+            and metrics[0]["decode_tokens"] == 7
+        ):
+            del metrics[0]
         if len(metrics) != expected_generations:
             raise ParseError(
                 f"{log}: expected {expected_generations} generations, "

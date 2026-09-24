@@ -1,4 +1,4 @@
-gpus: [1, 2]
+gpus: [0]
 memory_fraction: 0.7
 server_seed: 1234
 max_running_requests: 512
